@@ -52,23 +52,25 @@ jobs:
 #     env:
 #       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 #       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#       AWS_DEFAULT_REGION: us-east-1
+#       AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
 #     steps:
-#       - name: Checkout
+#       - name: Checkout Code
 #         uses: actions/checkout@v4
 
 #       - name: Setup Terraform
 #         uses: hashicorp/setup-terraform@v3
+#         with:
+#           terraform_version: 1.5.7
 
 #       - name: Terraform Init
-#         run: terraform init
+#         run: terraform init -input=false
 
 #       - name: Terraform Validate
 #         run: terraform validate
 
 #       - name: Terraform Plan
-#         run: terraform plan -out=tfplan
+#         run: terraform plan -input=false -out=tfplan
 
 #       - name: Upload Plan Artifact
 #         uses: actions/upload-artifact@v4
@@ -80,27 +82,32 @@ jobs:
 #     name: Terraform Apply
 #     runs-on: ubuntu-latest
 #     needs: plan
-#     environment: production   # 👈 requires manual approval
+#     environment: production   # 🔐 Requires manual approval
 
 #     env:
 #       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 #       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#       AWS_DEFAULT_REGION: us-east-1
+#       AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
 
 #     steps:
-#       - name: Checkout
+#       - name: Checkout Code
 #         uses: actions/checkout@v4
 
 #       - name: Setup Terraform
 #         uses: hashicorp/setup-terraform@v3
+#         with:
+#           terraform_version: 1.5.7
 
 #       - name: Terraform Init
-#         run: terraform init
+#         run: terraform init -input=false
 
 #       - name: Download Plan Artifact
 #         uses: actions/download-artifact@v4
 #         with:
 #           name: tfplan
 
+#       - name: Show Approval Message
+#         run: echo "Manual approval completed. Applying Terraform changes..."
+
 #       - name: Terraform Apply
-#         run: terraform apply -auto-approve tfplan
+#         run: terraform apply -input=false tfplan
