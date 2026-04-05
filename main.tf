@@ -1,17 +1,33 @@
-resource "aws_vpc" "name" {
-    cidr_block = "10.0.0.0/16"
-    tags = {
-      Name = "test_vp"
+terraform {
+  required_version = ">= 1.5.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
     }
-  
+  }
 }
 
+provider "aws" {
+  region = "ap-south-1"
+}
 
-resource "aws_subnet" "name2" {
-    vpc_id = aws_vpc.name.id
-    cidr_block = "10.0.0.0/24"
-    tags = {
-      Name = "mysubnet1"
-    }
-  
+# VPC
+resource "aws_vpc" "main_vpc" {
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name = "test_vpc"
+  }
+}
+
+# Subnet
+resource "aws_subnet" "public_subnet_1" {
+  vpc_id     = aws_vpc.main_vpc.id
+  cidr_block = "10.0.1.0/24"   # 🔥 changed (better practice)
+
+  tags = {
+    Name = "mysubnet1"
+  }
 }
